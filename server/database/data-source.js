@@ -20,7 +20,10 @@ const dbPassword = process.env.DB_PASSWORD || process.env.PGPASSWORD || 'postgre
 const dbName = process.env.DB_DATABASE || process.env.PGDATABASE || 'user_management';
 const dbSSLExplicit = process.env.DB_SSL;
 
-const isCloudDatabase = dbHost !== 'localhost' && dbHost !== '127.0.0.1';
+// Railway internal PostgreSQL doesn't need SSL
+const isRailwayInternal = dbHost.includes('railway.internal');
+const isLocalhost = dbHost === 'localhost' || dbHost === '127.0.0.1';
+const isCloudDatabase = !isLocalhost && !isRailwayInternal;
 const shouldUseSSL = dbSSLExplicit === 'true' || (dbSSLExplicit !== 'false' && isCloudDatabase);
 
 // CRITICAL: Log for debugging on Vercel
