@@ -1,5 +1,8 @@
 // server.js
-require('dotenv').config();
+// Only load dotenv in non-production (local development)
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 require('reflect-metadata');
 
 const app = require('./src/app');

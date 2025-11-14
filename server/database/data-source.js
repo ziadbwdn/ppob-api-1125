@@ -1,5 +1,8 @@
 // database/data-source.js
-require('dotenv').config();
+// Only load dotenv in non-production (local development)
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const { DataSource } = require('typeorm');
 const User = require('../src/models/User');
 const Profile = require('../src/models/Profile');
