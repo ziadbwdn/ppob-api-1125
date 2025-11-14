@@ -46,29 +46,32 @@ async function initializeDatabase() {
   dbInitializationInProgress = false;
 }
 
-// For Vercel serverless: initialize DB on first request
-app.use(async (req, res, next) => {
-  try {
-    await initializeDatabase();
-    next();
-  } catch (error) {
-    console.error('Database initialization error:', error);
-    res.status(503).json({
-      status: 503,
-      message: 'Service temporarily unavailable - database connection error',
-      data: null
-    });
-  }
-});
+// Detect if running on Vercel (serverless) vs traditional server
+const isVercel = process.env.VERCEL === '1' || process.env.NOW_REGION;
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
+if (isVercel) {
+  // For Vercel serverless: initialize DB on first request
+  app.use(async (req, res, next) => {
+    try {
+      await initializeDatabase();
+      next();
+    } catch (error) {
+      console.error('Database initialization error:', error);
+      res.status(503).json({
+        status: 503,
+        message: 'Service temporarily unavailable - database connection error',
+        data: null
+      });
+    }
+  });
+} else {
+  // For Railway, local dev, or any traditional server
   async function bootstrap() {
     try {
       await initializeDatabase();
       app.listen(PORT, () => {
-        console.log(`✓ Server running on http://localhost:${PORT}`);
-        console.log(`✓ API documentation: http://localhost:${PORT}/api-docs`);
+        console.log(`✓ Server running on http://0.0.0.0:${PORT}`);
+        console.log(`✓ API documentation: http://0.0.0.0:${PORT}/api-docs`);
       });
     } catch (error) {
       console.error('✗ Failed to start server:', error);
