@@ -1,5 +1,26 @@
 // src/config/swagger.js
 
+// Determine servers based on environment
+const getServers = () => {
+  const servers = [];
+
+  // Always include development server
+  servers.push({
+    url: 'http://localhost:3000/api',
+    description: 'Development server',
+  });
+
+  // Add production server if not in development
+  if (process.env.NODE_ENV === 'production') {
+    servers.push({
+      url: `${process.env.API_URL || 'https://ppob-api-1125.vercel.app'}/api`,
+      description: 'Production server (Vercel)',
+    });
+  }
+
+  return servers;
+};
+
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -12,16 +33,7 @@ const swaggerOptions = {
         url: 'https://github.com/ziadbwdn',
       },
     },
-    servers: [
-      {
-        url: 'http://localhost:3000/api',
-        description: 'Development server',
-      },
-      {
-        url: 'https://api.nutech-integrasi.app/api',
-        description: 'Production server',
-      },
-    ],
+    servers: getServers(),
     components: {
       securitySchemes: {
         bearerAuth: {
