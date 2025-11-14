@@ -1,9 +1,13 @@
 # Dependencies
-/node_modules
+node_modules/
+**/node_modules/
+*/node_modules/
 
 # Production
-/build
-/dist
+build/
+dist/
+**/build/
+**/dist/
 
 # Logs
 logs
@@ -13,12 +17,13 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# Environment variables
+# Environment variables (keep examples)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+!.env.example
 
 # IDEs and editors
 .idea
@@ -29,6 +34,28 @@ lerna-debug.log*
 *.sln
 *.sw?
 
-# Miscellaneous
+# Testing
+coverage/
+**/coverage/
+
+# OS
 .DS_Store
-coverage
+Thumbs.db
+
+# Client directory (entire client code)
+client/
+
+# Server directory (entire backend)
+server/
+
+# Documentation (except README files)
+GUIDE.md
+GUIDE-2.md
+CLI_CLIENT_GUIDELINE.md
+IMPLEMENTATION_GUIDE.md
+README_IMPLEMENTATION.md
+PROJECT_STRUCTURE.md
+CLAUDE.md
+
+# Keep README files only
+!README.md
