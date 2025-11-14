@@ -19,6 +19,10 @@ const AppDataSource = new DataSource({
   migrations: ['database/migrations/*.js'],
   synchronize: false,
   logging: process.env.NODE_ENV === 'development',
+  // Enable SSL for cloud databases like Aiven
+  ssl: process.env.DB_SSL === 'true' || process.env.NODE_ENV === 'production' ? {
+    rejectUnauthorized: false,
+  } : false,
 });
 
 module.exports = { AppDataSource };
