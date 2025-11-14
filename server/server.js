@@ -7,21 +7,45 @@ const { AppDataSource } = require('./database/data-source');
 
 const PORT = process.env.PORT || 3000;
 
-async function bootstrap() {
-  try {
-    // Initialize database connection
-    await AppDataSource.initialize();
-    console.log('✓ Database connected');
+// Initialize database connection
+let dbInitialized = false;
 
-    // Start server
-    app.listen(PORT, () => {
-      console.log(`✓ Server running on http://localhost:${PORT}`);
-      console.log(`✓ API documentation: http://localhost:${PORT}/api-docs`);
-    });
+async function initializeDatabase() {
+  if (dbInitialized) return;
+  try {
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+      console.log('✓ Database connected');
+      dbInitialized = true;
+    }
   } catch (error) {
-    console.error('✗ Failed to start server:', error);
-    process.exit(1);
+    console.error('✗ Failed to initialize database:', error);
+    throw error;
   }
 }
 
-bootstrap();
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  async function bootstrap() {
+    try {
+      await initializeDatabase();
+      app.listen(PORT, () => {
+        console.log(`✓ Server running on http://localhost:${PORT}`);
+        console.log(`✓ API documentation: http://localhost:${PORT}/api-docs`);
+      });
+    } catch (error) {
+      console.error('✗ Failed to start server:', error);
+      process.exit(1);
+    }
+  }
+  bootstrap();
+} else {
+  // For Vercel serverless, ensure DB is initialized on first request
+  app.use(async (req, res, next) => {
+    await initializeDatabase();
+    next();
+  });
+}
+
+// Export for Vercel
+module.exports = app;
