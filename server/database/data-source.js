@@ -12,11 +12,12 @@ const Account = require('../src/models/Account');
 const Transaction = require('../src/models/Transaction');
 
 // Determine if SSL should be used
-const dbHost = process.env.DB_HOST || 'localhost';
-const dbPort = process.env.DB_PORT || 5432;
-const dbUsername = process.env.DB_USERNAME || 'postgres';
-const dbPassword = process.env.DB_PASSWORD || 'postgres';
-const dbName = process.env.DB_DATABASE || 'user_management';
+// Support both custom DB_* vars and Railway's automatic PG* vars
+const dbHost = process.env.DB_HOST || process.env.PGHOST || 'localhost';
+const dbPort = process.env.DB_PORT || process.env.PGPORT || 5432;
+const dbUsername = process.env.DB_USERNAME || process.env.PGUSER || 'postgres';
+const dbPassword = process.env.DB_PASSWORD || process.env.PGPASSWORD || 'postgres';
+const dbName = process.env.DB_DATABASE || process.env.PGDATABASE || 'user_management';
 const dbSSLExplicit = process.env.DB_SSL;
 
 const isCloudDatabase = dbHost !== 'localhost' && dbHost !== '127.0.0.1';
