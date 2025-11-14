@@ -48,17 +48,21 @@ Thumbs.db
 # Client directory (entire client code)
 client/
 
-# Server directory (entire backend)
-server/
+# Exclude all root-level files and directories
+/*
 
-# Documentation (except README files)
-GUIDE.md
-GUIDE-2.md
-CLI_CLIENT_GUIDELINE.md
-IMPLEMENTATION_GUIDE.md
-README_IMPLEMENTATION.md
-PROJECT_STRUCTURE.md
-CLAUDE.md
+# But INCLUDE server folder
+!server/
 
-# Keep README files only
-!README.md
+# Exclude node_modules everywhere
+node_modules/
+**/node_modules/
+*/node_modules/
+
+# Exclude package-lock.json everywhere
+package-lock.json
+**/package-lock.json
+*/package-lock.json
+
+# .gitignore itself
+!.gitignore
