@@ -33,6 +33,7 @@ async function initializeDatabase() {
 
   dbInitializationInProgress = true;
   try {
+    console.log('[DB] Initializing connection...');
     if (!AppDataSource.isInitialized) {
       await AppDataSource.initialize();
       console.log('✓ Database connected');
@@ -40,8 +41,9 @@ async function initializeDatabase() {
     dbInitialized = true;
   } catch (error) {
     console.error('✗ Failed to initialize database:', error.message);
+    console.error('✗ Full error:', error);
     dbInitializationInProgress = false;
-    // Don't throw, let the request handler deal with it
+    throw error; // Re-throw so we can see the error
   }
   dbInitializationInProgress = false;
 }
